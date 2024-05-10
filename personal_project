@@ -1,0 +1,337 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(EventHubApp());
+}
+
+class EventHubApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Event Hub',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: LoginPage(),
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      body: Center(
+        child: LoginForm(),
+      ),
+    );
+  }
+}
+
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+            controller: _usernameController,
+            decoration: InputDecoration(
+              labelText: 'Username',
+            ),
+          ),
+          SizedBox(height: 20.0),
+          TextField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Password',
+            ),
+          ),
+          SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: () {
+              // Add authentication logic here
+              // For now, let's just print the username and password
+              print('Username: ${_usernameController.text}');
+              print('Password: ${_passwordController.text}');
+
+              // Navigate to home page after successful login
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
+            child: Text('Login'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to catering page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CateringPage()),
+                );
+              },
+              child: Text('Catering'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to decoration page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DecorationPage()),
+                );
+              },
+              child: Text('Decoration'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to photography page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PhotographyPage()),
+                );
+              },
+              child: Text('Photography'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to concert page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConcertPage()),
+                );
+              },
+              child: Text('Concert'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CateringPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Catering'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to catering dealer info page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CateringDealerInfoPage()),
+                );
+              },
+              child: Text('Catering Dealer Info'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to food items page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FoodItemsPage()),
+                );
+              },
+              child: Text('Food Items'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CateringDealerInfoPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Catering Dealer Info'),
+      ),
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            leading: Text('Person 1', style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text('Name: Nezoom Molla\nPhone: 018******'),
+            onTap: () {
+              // You can add functionality here if needed
+            },
+          ),
+          ListTile(
+            leading: Text('Person 2', style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text('Name: Anamika Lily\nPhone: 017******'),
+            onTap: () {
+              // You can add functionality here if needed
+            },
+          ),
+          ListTile(
+            leading: Text('Person 3', style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text('Name: Tanjina Mou\nPhone: 013******'),
+            onTap: () {
+              // You can add functionality here if needed
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FoodItemsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Food Items'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Show food packages
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FoodPackagesPage()),
+                );
+              },
+              child: Text('View Food Packages'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FoodPackagesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Food Packages'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 10),
+            Text('Package 1: Roast, Pulao, Beef Rezala'),
+            SizedBox(height: 10),
+            Text('Package 2: Mutton kacchi, Kebab, Borhani'),
+            SizedBox(height: 10),
+            Text('Package 3: Fried rice, Chicken fry, Vegetable'),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to customize food page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CustomizeFoodPage()),
+                );
+              },
+              child: Text('Customize Your Food'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomizeFoodPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Customize Your Food'),
+      ),
+      body: Center(
+        child: Text('Customize Your Food Page'),
+      ),
+    );
+  }
+}
+
+class DecorationPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Decoration'),
+      ),
+      body: Center(
+        child: Text('Decoration Page'),
+      ),
+    );
+  }
+}
+
+class PhotographyPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Photography'),
+      ),
+      body: Center(
+        child: Text('Photography Page'),
+      ),
+    );
+  }
+}
+
+class ConcertPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Concert'),
+      ),
+      body: Center(
+        child: Text('Concert Page'),
+      ),
+    );
+  }
+}
