@@ -1,337 +1,381 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(EventHubApp());
+  runApp(MyApp());
 }
 
-class EventHubApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Event Hub',
+      title: 'EventUp',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
+      debugShowCheckedModeBanner: false,
       home: LoginPage(),
     );
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String _username = "";
+  String _password = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('EventUp'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(
-        child: LoginForm(),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.people,
+                size: 100.0,
+                color: Theme.of(context).primaryColor,
+              ),
+              SizedBox(height: 20.0),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => setState(() => _username = value),
+              ),
+              SizedBox(height: 10.0),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                onChanged: (value) => setState(() => _password = value),
+              ),
+              SizedBox(height: 20.0),
+              TextButton(
+                onPressed: () {
+                  // Implement forgot password logic here
+                },
+                child: Text('Forgot Password?'),
+              ),
+              SizedBox(height: 10.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Implement login logic here (e.g., validate credentials)
+                  if (_username.isNotEmpty && _password.isNotEmpty) {
+                    Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                  } else {
+                    // Show an error message
+                  }
+                },
+                child: Text('Login'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-class LoginForm extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('EventUp'),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      drawer: Drawer(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.purple.shade900, Colors.purple.shade300],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                child: Text('Menu'),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                ),
+              ),
+              ListTile(
+                title: Text('Contact Us'),
+                onTap: () {
+                  // Navigate to contact screen
+                },
+              ),
+              ListTile(
+                title: Text('Log Out'),
+                onTap: () {
+                  // Navigate back to login page
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (context) => LoginPage()));
+                },
+              ),
+              ListTile(
+                title: Text('Host Profile'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HostProfilePage()));
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      buildServiceCard(context, 'Catering Services', Icons.food_bank, Colors.orange),
+                      buildServiceCard(context, 'Concert', Icons.music_note, Colors.lightBlue),
+                      buildServiceCard(context, 'Photography', Icons.camera_alt, Colors.pink),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      buildServiceCard(context, 'Decoration Services', Icons.format_paint, Colors.green),
+                      buildServiceCard(context, 'Venue Selection', Icons.location_city, Colors.blue),
+                      buildServiceCard(context, 'Transparent Pricing', Icons.attach_money, Colors.purple),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.0),
+            buildReview(context, 'Beautiful Venue', 'Amazing venue with great ambiance.', '\$500 per day', 4),
+            buildReview(context, 'Exquisite Decor', 'Stunning decor that made our event memorable.', '\$300 per event', 5),
+            buildReview(context, 'Delicious Catering', 'The food was delicious and the service was impeccable.', '\$1000 per event', 4),
+            buildReview(context, 'Professional Photography', 'Captured precious moments beautifully.', '\$800 per event', 5),
+            buildReview(context, 'Entertaining Concert', 'A concert that kept everyone on their feet.', '\$2000 per event', 4),
+            buildReview(context, 'Affordable Pricing', 'Transparent pricing with no hidden costs.', 'Varies', 5),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildServiceCard(BuildContext context, String serviceName, IconData icon, Color cardColor) {
+    return Card(
+      color: cardColor,
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(serviceName),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfileListPage()),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildReview(BuildContext context, String title, String description, String price, int rating) {
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: 'Username',
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
             ),
           ),
-          SizedBox(height: 20.0),
-          TextField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(
-              labelText: 'Password',
-            ),
+          SizedBox(height: 10.0),
+          Text(
+            description,
+            style: TextStyle(fontSize: 16.0),
           ),
-          SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              // Add authentication logic here
-              // For now, let's just print the username and password
-              print('Username: ${_usernameController.text}');
-              print('Password: ${_passwordController.text}');
-
-              // Navigate to home page after successful login
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
-            child: Text('Login'),
+          SizedBox(height: 5.0),
+          Text(
+            'Price: $price',
+            style: TextStyle(fontSize: 16.0),
           ),
+          SizedBox(height: 5.0),
+          Row(
+            children: [
+              Icon(Icons.star, color: Colors.amber),
+              SizedBox(width: 5.0),
+              Text('$rating stars'),
+            ],
+          ),
+          Divider(),
         ],
       ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class ServiceDetails extends StatelessWidget {
+  final String serviceName;
+
+  ServiceDetails(this.serviceName);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text(serviceName),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to catering page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CateringPage()),
-                );
-              },
-              child: Text('Catering'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to decoration page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DecorationPage()),
-                );
-              },
-              child: Text('Decoration'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to photography page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PhotographyPage()),
-                );
-              },
-              child: Text('Photography'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to concert page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConcertPage()),
-                );
-              },
-              child: Text('Concert'),
-            ),
-          ],
+        child: Text('Detailed information about $serviceName'),
+      ),
+    );
+  }
+}
+
+class HostProfilePage extends StatefulWidget {
+  @override
+  _HostProfilePageState createState() => _HostProfilePageState();
+}
+
+class _HostProfilePageState extends State<HostProfilePage> {
+  String _firstName = "";
+  String _lastName = "";
+  String _number = "";
+  String _shopAddress = "";
+  String _shopType = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Host Profile'),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'First Name',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) => setState(() => _firstName = value),
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Last Name',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) => setState(() => _lastName = value),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Number',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => setState(() => _number = value),
+              ),
+              SizedBox(height: 10.0),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Shop Address',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => setState(() => _shopAddress = value),
+              ),
+              SizedBox(height: 10.0),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Shop Type',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => setState(() => _shopType = value),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Save profile data logic here
+                },
+                child: Text('Save'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class CateringPage extends StatelessWidget {
+class ProfileListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Catering'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to catering dealer info page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CateringDealerInfoPage()),
-                );
-              },
-              child: Text('Catering Dealer Info'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to food items page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FoodItemsPage()),
-                );
-              },
-              child: Text('Food Items'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CateringDealerInfoPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Catering Dealer Info'),
+        title: Text('Profiles'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
-        children: <Widget>[
-          ListTile(
-            leading: Text('Person 1', style: TextStyle(fontWeight: FontWeight.bold)),
-            title: Text('Name: Nezoom Molla\nPhone: 018******'),
-            onTap: () {
-              // You can add functionality here if needed
-            },
-          ),
-          ListTile(
-            leading: Text('Person 2', style: TextStyle(fontWeight: FontWeight.bold)),
-            title: Text('Name: Anamika Lily\nPhone: 017******'),
-            onTap: () {
-              // You can add functionality here if needed
-            },
-          ),
-          ListTile(
-            leading: Text('Person 3', style: TextStyle(fontWeight: FontWeight.bold)),
-            title: Text('Name: Tanjina Mou\nPhone: 013******'),
-            onTap: () {
-              // You can add functionality here if needed
-            },
-          ),
+        padding: EdgeInsets.all(20.0),
+        children: [
+          buildProfileTile(context, 'Nezoom', '018-7920-1862'),
+          buildProfileTile(context, 'Anamika', '019-7920-1862'),
+          buildProfileTile(context, 'Tanjila', '013-7920-1862'),
         ],
       ),
     );
   }
-}
 
-class FoodItemsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Food Items'),
+  Widget buildProfileTile(BuildContext context, String name, String number) {
+    return ListTile(
+      leading: CircleAvatar(
+        child: Icon(Icons.person),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                // Show food packages
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FoodPackagesPage()),
-                );
-              },
-              child: Text('View Food Packages'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FoodPackagesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Food Packages'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 10),
-            Text('Package 1: Roast, Pulao, Beef Rezala'),
-            SizedBox(height: 10),
-            Text('Package 2: Mutton kacchi, Kebab, Borhani'),
-            SizedBox(height: 10),
-            Text('Package 3: Fried rice, Chicken fry, Vegetable'),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to customize food page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CustomizeFoodPage()),
-                );
-              },
-              child: Text('Customize Your Food'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomizeFoodPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Customize Your Food'),
-      ),
-      body: Center(
-        child: Text('Customize Your Food Page'),
-      ),
-    );
-  }
-}
-
-class DecorationPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Decoration'),
-      ),
-      body: Center(
-        child: Text('Decoration Page'),
-      ),
-    );
-  }
-}
-
-class PhotographyPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Photography'),
-      ),
-      body: Center(
-        child: Text('Photography Page'),
-      ),
-    );
-  }
-}
-
-class ConcertPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Concert'),
-      ),
-      body: Center(
-        child: Text('Concert Page'),
-      ),
+      title: Text(name),
+      subtitle: Text(number),
     );
   }
 }
